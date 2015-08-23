@@ -220,7 +220,7 @@
     <Compile Include="Business\Coin.cs" />
     <Compile Include="Business\CoinWallet.cs" />
     <Compile Include="Business\Exceptions\InsufficientFundsWithParValueException.cs" />
-    <Compile Include="Business\Exceptions\WalletDoesNotHaveCoinsWithParValueException.cs" />
+    <Compile Include="Business\Exceptions\WalletDoesNotHaveCoinsForParValueException.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />

@@ -3,7 +3,7 @@ using System.Diagnostics.Contracts;
 
 namespace VendingMachine.Business
 {
-    public struct Coin
+    public struct Coin : IEquatable<Coin>
     {
         public readonly int ParValue;
         public readonly int Count;
@@ -31,14 +31,9 @@ namespace VendingMachine.Business
             return new Coin(ParValue, Count - coins);
         }
 
-        public static bool operator ==(Coin first, Coin second)
+        public bool Equals(Coin other)
         {
-            return first.Count == second.Count && first.ParValue == second.ParValue;
-        }
-
-        public static bool operator !=(Coin first, Coin second)
-        {
-            return !(first == second);
+            return ParValue == other.ParValue && Count == other.Count;
         }
     }
 }

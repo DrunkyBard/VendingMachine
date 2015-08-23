@@ -39,7 +39,7 @@ namespace VendingMachine.Business
 
             if (!_coins.TryGetValue(coin, out retrievedCoins))
             {
-                throw new WalletDoesNotHaveCoinsWithParValueException(coin.ParValue);
+                throw new WalletDoesNotHaveCoinsForParValueException(coin.ParValue);
             }
 
             if (retrievedCoins.Count < coin.Count)
@@ -47,7 +47,9 @@ namespace VendingMachine.Business
                 throw new InsufficientFundsWithParValueException(coin);
             }
 
-            var updatedWallet = _coins.Add(retrievedCoins.Substract(coin.Count));
+            var updatedWallet = _coins
+                .Remove(retrievedCoins)
+                .Add(retrievedCoins.Substract(coin.Count));
 
             return new CoinWallet(updatedWallet);
         }
