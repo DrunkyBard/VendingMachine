@@ -6,7 +6,7 @@ using Xunit;
 
 namespace VendingMachine.Tests
 {
-    public sealed class CoinWalletTests
+    public sealed class WalletTests
     {
         [Theory]
         [InlineData(1, 1)]
@@ -18,7 +18,7 @@ namespace VendingMachine.Tests
         public void WhenPutCoinInEmptyWallet_ThenCoinShouldBeInGivenWallet(int parValue, int coinCount)
         {
             var coin = new Coin(parValue, coinCount);
-            var wallet = new CoinWallet();
+            var wallet = new Wallet();
 
             var walletCoins = wallet
                 .Put(coin)
@@ -40,7 +40,7 @@ namespace VendingMachine.Tests
             var coin = new Coin(parValue, coinCount);
             var inWalletCoinCount = new Random().Next(0, 100);
             var inWalletCoin = new Coin(parValue, inWalletCoinCount);
-            var wallet = new CoinWallet(new [] { inWalletCoin });
+            var wallet = new Wallet(new [] { inWalletCoin });
 
             var walletCoins = wallet
                 .Put(coin)
@@ -62,7 +62,7 @@ namespace VendingMachine.Tests
             var coin = new Coin(parValue, coinCount);
             var inWalletCoinCount = new Random().Next(coinCount, coinCount + 100);
             var inWalletCoin = new Coin(parValue, inWalletCoinCount);
-            var wallet = new CoinWallet(new [] {inWalletCoin});
+            var wallet = new Wallet(new [] {inWalletCoin});
 
             var walletCoins = wallet
                 .Retrieve(coin)
@@ -84,7 +84,7 @@ namespace VendingMachine.Tests
             var coin = new Coin(parValue, coinCount);
             var inWalletCoinCount = new Random().Next(0, coinCount - 5);
             var inWalletCoin = new Coin(inWalletCoinPar, inWalletCoinCount);
-            var wallet = new CoinWallet(new [] {inWalletCoin});
+            var wallet = new Wallet(new [] {inWalletCoin});
 
             Assert.Throws<WalletDoesNotHaveCoinsForParValueException>(() => wallet.Retrieve(coin));
         }
@@ -101,7 +101,7 @@ namespace VendingMachine.Tests
             var coin = new Coin(parValue, coinCount);
             var inWalletCoinCount = new Random().Next(0, coinCount - 5);
             var inWalletCoin = new Coin(parValue, inWalletCoinCount);
-            var wallet = new CoinWallet(new [] {inWalletCoin});
+            var wallet = new Wallet(new [] {inWalletCoin});
 
             Assert.Throws<InsufficientFundsWithParValueException>(() => wallet.Retrieve(coin));
         }

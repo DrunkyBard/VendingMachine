@@ -6,21 +6,21 @@ using VendingMachine.Business.Exceptions;
 
 namespace VendingMachine.Business
 {
-    public class CoinWallet : IEnumerable<Coin>
+    public class Wallet : IEnumerable<Coin>
     {
         private readonly ImmutableHashSet<Coin> _coins;
 
-        public CoinWallet()
+        public Wallet()
         {
             _coins = ImmutableHashSet.Create<Coin>(new CoinEqualityComparer());
         }
 
-        public CoinWallet(IEnumerable<Coin> coins)
+        public Wallet(IEnumerable<Coin> coins)
         {
             _coins = coins.ToImmutableHashSet(new CoinEqualityComparer());
         }
 
-        public CoinWallet Put(Coin coin)
+        public Wallet Put(Coin coin)
         {
             Coin oldValue;
             var newCoinValue = _coins.TryGetValue(coin, out oldValue) 
@@ -30,10 +30,10 @@ namespace VendingMachine.Business
                 .Remove(oldValue)
                 .Add(newCoinValue);
             
-            return new CoinWallet(updatedWallet);
+            return new Wallet(updatedWallet);
         }
 
-        public CoinWallet Retrieve(Coin coin)
+        public Wallet Retrieve(Coin coin)
         {
             Coin retrievedCoins;
 
@@ -51,7 +51,7 @@ namespace VendingMachine.Business
                 .Remove(retrievedCoins)
                 .Add(retrievedCoins.Substract(coin.Count));
 
-            return new CoinWallet(updatedWallet);
+            return new Wallet(updatedWallet);
         }
 
         public IReadOnlyCollection<Coin> ShowCoins()
