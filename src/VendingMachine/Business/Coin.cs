@@ -5,10 +5,10 @@ namespace VendingMachine.Business
 {
     public struct Coin : IEquatable<Coin>
     {
-        public readonly int ParValue;
+        public readonly decimal ParValue;
         public readonly int Count;
 
-        public Coin(int parValue, int count)
+        public Coin(decimal parValue, int count)
         {
             Contract.Requires(parValue > 0);
             Contract.Requires(count >= 0);

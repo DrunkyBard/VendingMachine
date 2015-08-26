@@ -218,6 +218,9 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Business\BuyerWallet.cs" />
     <Compile Include="Business\Coin.cs" />
+    <Compile Include="Business\Events\FundsRecoveredEvent.cs" />
+    <Compile Include="Business\Goods.cs" />
+    <Compile Include="Business\VendingMachine.cs" />
     <Compile Include="Business\Wallet.cs" />
     <Compile Include="Business\Exceptions\InsufficientFundsWithParValueException.cs" />
     <Compile Include="Business\Exceptions\WalletDoesNotHaveCoinsForParValueException.cs" />
