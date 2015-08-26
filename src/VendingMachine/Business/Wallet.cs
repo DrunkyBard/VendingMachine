@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using VendingMachine.Business.Exceptions;
 
@@ -54,6 +55,7 @@ namespace VendingMachine.Business
             return new Wallet(updatedWallet);
         }
 
+        [Pure]
         public IReadOnlyCollection<Coin> ShowCoins()
         {
             return _coins.ToList();
