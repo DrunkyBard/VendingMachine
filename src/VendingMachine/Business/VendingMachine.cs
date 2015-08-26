@@ -1,4 +1,6 @@
-﻿using System.Diagnostics.Contracts;
+﻿using System.Collections.Generic;
+using System.Diagnostics.Contracts;
+using System.Linq;
 using VendingMachine.Business.Events;
 
 namespace VendingMachine.Business
@@ -17,10 +19,12 @@ namespace VendingMachine.Business
             _buyerWallet = buyerWallet;
         }
 
-        public FundsRecoveredEvent RecoverFunds(decimal funds)
+        public FundsRecoveredEvent RecoverFunds(IReadOnlyCollection<Coin> funds)
         {
-            Contract.Requires(funds != decimal.Zero);
+            Contract.Requires(funds != null);
             Contract.Ensures(Contract.Result<FundsRecoveredEvent>() != null);
+
+            //var groupedFunds = funds.Aggregate(decimal.Zero, ())
 
             return new FundsRecoveredEvent(_vendingMachineWallet, _buyerWallet);
         }
