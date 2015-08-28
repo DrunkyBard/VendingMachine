@@ -25,14 +25,7 @@ namespace VendingMachine.Business
         {
             Contract.Requires(coins != null);
             
-            Wallet wallet = this;
-
-            foreach (var coin in coins)
-            {
-                wallet = wallet.Put(coin);
-            }
-
-            return wallet;
+            return coins.Aggregate(this, (current, coin) => current.Put(coin));
         }
 
         public Wallet Put(Coin coin)
@@ -52,14 +45,7 @@ namespace VendingMachine.Business
         {
             Contract.Requires(coins != null);
 
-            Wallet wallet = this;
-
-            foreach (var coin in coins)
-            {
-                wallet = wallet.Retrieve(coin);
-            }
-
-            return wallet;
+            return coins.Aggregate(this, (current, coin) => current.Retrieve(coin));
         }
 
         public Wallet Retrieve(Coin coin)
