@@ -73,6 +73,28 @@ namespace VendingMachine.Tests
         }
 
         [Theory]
+        [InlineData(1, 1)]
+        [InlineData(1, 10)]
+        [InlineData(2, 1)]
+        [InlineData(2, 10)]
+        [InlineData(5, 1)]
+        [InlineData(5, 10)]
+        public void WhenRetrieveCoinFromWallet_AndWalletTotalAreEqualRetrieveFunds_ThenWalletShouldBeEmpty(int parValue, int coinCount)
+        {
+            var coin = new Coin(parValue, coinCount);
+            var inWalletCoinCount = coinCount;
+            var inWalletCoin = new Coin(parValue, inWalletCoinCount);
+            var wallet = new Wallet(new [] {inWalletCoin});
+
+            var walletCoins = wallet
+                .Retrieve(coin)
+                .ShowCoins();
+            inWalletCoin = inWalletCoin.Substract(coinCount);
+
+            Assert.True(walletCoins.Single().Equals(inWalletCoin));
+        }
+
+        [Theory]
         [InlineData(1, 5, 7)]
         [InlineData(1, 10, 2)]
         [InlineData(2, 5, 5)]

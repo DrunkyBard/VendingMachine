@@ -21,6 +21,20 @@ namespace VendingMachine.Business
             _coins = coins.ToImmutableHashSet(new CoinEqualityComparer());
         }
 
+        public Wallet Put(IReadOnlyCollection<Coin> coins)
+        {
+            Contract.Requires(coins != null);
+            
+            Wallet wallet = this;
+
+            foreach (var coin in coins)
+            {
+                wallet = wallet.Put(coin);
+            }
+
+            return wallet;
+        }
+
         public Wallet Put(Coin coin)
         {
             Coin oldValue;
@@ -32,6 +46,20 @@ namespace VendingMachine.Business
                 .Add(newCoinValue);
             
             return new Wallet(updatedWallet);
+        }
+
+        public Wallet Retrieve(IReadOnlyCollection<Coin> coins)
+        {
+            Contract.Requires(coins != null);
+
+            Wallet wallet = this;
+
+            foreach (var coin in coins)
+            {
+                wallet = wallet.Retrieve(coin);
+            }
+
+            return wallet;
         }
 
         public Wallet Retrieve(Coin coin)
@@ -53,6 +81,11 @@ namespace VendingMachine.Business
                 .Add(retrievedCoins.Substract(coin.Count));
 
             return new Wallet(updatedWallet);
+        }
+
+        public decimal TotalFunds()
+        {
+            return _coins.Aggregate(decimal.Zero, (current, next) => current + next.ParValue*next.Count);
         }
 
         [Pure]
