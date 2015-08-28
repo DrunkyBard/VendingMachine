@@ -77,8 +77,14 @@ namespace VendingMachine.Business
             }
 
             var updatedWallet = _coins
-                .Remove(retrievedCoins)
-                .Add(retrievedCoins.Substract(coin.Count));
+                .Remove(retrievedCoins);
+
+            retrievedCoins = retrievedCoins.Substract(coin.Count);
+
+            if (retrievedCoins.Count > 0)
+            {
+                updatedWallet = updatedWallet.Add(retrievedCoins);
+            }
 
             return new Wallet(updatedWallet);
         }

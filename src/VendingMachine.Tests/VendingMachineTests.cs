@@ -31,5 +31,15 @@ namespace VendingMachine.Tests
             Assert.Single(recoveredBuyerWallet, c => c.ParValue == 2 && c.Count == 1);
             Assert.Single(recoveredBuyerWallet, c => c.ParValue == 1 && c.Count == 1);
         }
+
+        private IEnumerable<Coin[]> CoinsFixture()
+        {
+            yield return new[]
+            {
+                new Coin(10, 2),
+                new Coin(2, 1),
+                new Coin(1, 1)
+            };
+        }
     }
 }

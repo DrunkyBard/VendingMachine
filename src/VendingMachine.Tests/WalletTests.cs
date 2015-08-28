@@ -89,9 +89,8 @@ namespace VendingMachine.Tests
             var walletCoins = wallet
                 .Retrieve(coin)
                 .ShowCoins();
-            inWalletCoin = inWalletCoin.Substract(coinCount);
 
-            Assert.True(walletCoins.Single().Equals(inWalletCoin));
+            Assert.True(walletCoins.Count == 0);
         }
 
         [Theory]
