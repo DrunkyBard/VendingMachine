@@ -51,6 +51,20 @@ namespace VendingMachine.Tests
         }
 
         [Theory]
+        [MemberData("DistinctCoinsTestFixture", MemberType = typeof(WalletTestFixture))]
+        public void WhenInitializeWalletWithRepeatedParValueCoins_ThenWalletShouldContainSumCoinsForGivenParValue(
+            Coin[] inputCoins,
+            Coin[] expectedCoins)
+        {
+            var wallet = new Wallet(inputCoins);
+
+            foreach (var actualCoin in wallet.ShowCoins())
+            {
+                Assert.True(expectedCoins.Count(c => c.ParValue == actualCoin.ParValue && c.Count == actualCoin.Count) == 1);
+            }
+        }
+
+        [Theory]
         [InlineData(1, 1)]
         [InlineData(1, 10)]
         [InlineData(2, 1)]
@@ -100,10 +114,13 @@ namespace VendingMachine.Tests
         [InlineData(2, 10, 1)]
         [InlineData(5, 5, 2)]
         [InlineData(5, 10, 10)]
-        public void Retrieve_WhenWalletDoesNotHaveCoinsForGivenPar_ThenShouldThrowDoesNotHaveCoinException(int parValue, int coinCount, int inWalletCoinPar)
+        public void Retrieve_WhenWalletDoesNotHaveCoinsForGivenPar_ThenShouldThrowDoesNotHaveCoinException(
+            int parValue, 
+            int coinCount, 
+            int inWalletCoinPar)
         {
             var coin = new Coin(parValue, coinCount);
-            var inWalletCoinCount = new Random().Next(0, coinCount - 5);
+            var inWalletCoinCount = new Random().Next(1, coinCount - 1);
             var inWalletCoin = new Coin(inWalletCoinPar, inWalletCoinCount);
             var wallet = new Wallet(new [] {inWalletCoin});
 
@@ -120,7 +137,7 @@ namespace VendingMachine.Tests
         public void Retrieve_WhenInsufficientFundsInWalletForGivenPar_ThenShouldThrowDoesNotHaveFundsException(int parValue, int coinCount)
         {
             var coin = new Coin(parValue, coinCount);
-            var inWalletCoinCount = new Random().Next(0, coinCount - 5);
+            var inWalletCoinCount = new Random().Next(0, coinCount - 1);
             var inWalletCoin = new Coin(parValue, inWalletCoinCount);
             var wallet = new Wallet(new [] {inWalletCoin});
 

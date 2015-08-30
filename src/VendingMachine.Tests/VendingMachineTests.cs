@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using VendingMachine.Business;
 using Xunit;
@@ -8,38 +9,53 @@ namespace VendingMachine.Tests
     public sealed class VendingMachineTests
     {
         [Fact]
-        public void RecoverFunds_WhenBuyerWantsRecoverZeroFunds_ThenVendingMachineShouldPreventRecoverOperation()
+        public void RecoverFunds_WhenBuyerWantsRecoverZeroAmount_ThenVendingMachineShouldPreventRecoverOperation()
         {
-            var funds = new List<Coin>
+            var machineWallet = new Wallet();
+            var buyerWallet = new Wallet();
+            var vendingMachine = new Business.VendingMachine(machineWallet, buyerWallet);
+            Contract.ContractFailed += (sender, args) =>
             {
-                new Coin(10, 2),
-                new Coin(2, 1),
-                new Coin(1, 1)
+                Assert.True(args.FailureKind == ContractFailureKind.Precondition);
+                args.SetHandled();
             };
-            var buyerWallet = new Wallet(Enumerable.Empty<Coin>());
-            var machineWallet = new Wallet(Enumerable.Empty<Coin>());
+
+            vendingMachine.RecoverFunds(Enumerable.Empty<Coin>().ToList());
+        }
+
+        [Theory]
+        [MemberData("RecoverDepositedAmountFixture", MemberType = typeof(VendingMachineTestFixture))]
+        public void RecoverFunds_WhenBuyerWantsRecoverDepositedAmount_ThenVendingMachineShouldRecoverFundsWithLessCoins(
+            Wallet machineWallet,
+            Wallet buyerWallet,
+            IReadOnlyCollection<Coin> depositedAmount,
+            Wallet expectedMachineWallet,
+            Wallet expectedBuyerWallet)
+        {
             var vendingMachine = new Business.VendingMachine(machineWallet, buyerWallet);
 
-            var @event = vendingMachine.RecoverFunds(funds);
+            var @event = vendingMachine.RecoverFunds(depositedAmount);
             var recoveredMachineWallet = @event.VendingMachineWallet;
             var recoveredBuyerWallet = @event.BuyerWallet;
 
-            Assert.True(!recoveredMachineWallet.Any());
-            
-            Assert.True(recoveredBuyerWallet.Any());
-            Assert.Single(recoveredBuyerWallet, c => c.ParValue == 10 && c.Count == 2);
-            Assert.Single(recoveredBuyerWallet, c => c.ParValue == 2 && c.Count == 1);
-            Assert.Single(recoveredBuyerWallet, c => c.ParValue == 1 && c.Count == 1);
-        }
-
-        private IEnumerable<Coin[]> CoinsFixture()
-        {
-            yield return new[]
+            if (!expectedMachineWallet.Any())
             {
-                new Coin(10, 2),
-                new Coin(2, 1),
-                new Coin(1, 1)
-            };
+                Assert.True(!recoveredMachineWallet.Any());
+            }
+            else
+            {
+                var expectedBuyerWalletMatch = !expectedBuyerWallet
+                    .Except(recoveredBuyerWallet)
+                    .Any();
+
+                Assert.True(expectedBuyerWalletMatch);
+            }
+
+            var expectedMachineWalletMatch = !expectedMachineWallet
+                .Except(recoveredMachineWallet)
+                .Any();
+
+            Assert.True(expectedMachineWalletMatch);
         }
     }
 }

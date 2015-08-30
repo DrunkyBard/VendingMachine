@@ -11,7 +11,7 @@ namespace VendingMachine.Business
         public Coin(decimal parValue, int count)
         {
             Contract.Requires(parValue > 0);
-            Contract.Requires(count >= 0);
+            Contract.Requires(count > 0);
 
             ParValue = parValue;
             Count = count;

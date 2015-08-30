@@ -19,14 +19,17 @@ namespace VendingMachine.Business
             _buyerWallet = buyerWallet;
         }
 
-        public FundsRecoveredEvent RecoverFunds(IReadOnlyCollection<Coin> funds)
+        public FundsRecoveredEvent RecoverFunds(IReadOnlyCollection<Coin> depositedAmount)
         {
-            Contract.Requires(funds != null);
+            Contract.Requires(depositedAmount != null);
+            Contract.Requires(depositedAmount.Any());
             Contract.Ensures(Contract.Result<FundsRecoveredEvent>() != null);
 
-            _vendingMachineWallet = _vendingMachineWallet.Put(funds);
+            var total = depositedAmount.Aggregate(decimal.Zero, (current, coin) => current + coin.Total);
+            _vendingMachineWallet = _vendingMachineWallet.Put(depositedAmount);
+            _buyerWallet = _buyerWallet.Retrieve(depositedAmount);
+
             var orderedWallet = _vendingMachineWallet.OrderByDescending(x => x.ParValue);
-            var total = funds.Aggregate(decimal.Zero, (currentFund, nextCoint) => currentFund + nextCoint.ParValue * nextCoint.Count);
             var recoveredCoins = new List<Coin>();
 
             foreach (var coin in orderedWallet)
@@ -39,7 +42,13 @@ namespace VendingMachine.Business
                 else
                 {
                     var recoveredCoinCount = (int)(total / coin.ParValue);
-                    total -= coin.ParValue*recoveredCoinCount;
+
+                    if (recoveredCoinCount == 0)
+                    {
+                        continue;
+                    }
+
+                    total -= coin.ParValue * recoveredCoinCount;
                     recoveredCoins.Add(new Coin(coin.ParValue, recoveredCoinCount));
                 }
             }
