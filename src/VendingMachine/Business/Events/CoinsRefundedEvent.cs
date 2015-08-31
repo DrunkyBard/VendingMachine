@@ -1,13 +1,13 @@
 ﻿using System.Diagnostics.Contracts;
 
-namespace VendingMachine.Business.Events
+namespace VendingMachineApp.Business.Events
 {
-    public sealed class FundsRecoveredEvent
+    public sealed class CoinsRefundedEvent
     {
         public readonly Wallet VendingMachineWallet;
         public readonly Wallet BuyerWallet;
 
-        public FundsRecoveredEvent(Wallet machineWallet, Wallet buyerWallet)
+        public CoinsRefundedEvent(Wallet machineWallet, Wallet buyerWallet)
         {
             Contract.Requires(machineWallet != null);
             Contract.Requires(buyerWallet != null && buyerWallet.ShowCoins().Count > 0);

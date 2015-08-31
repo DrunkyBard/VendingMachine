@@ -1,19 +1,30 @@
-﻿using System.Diagnostics.Contracts;
+﻿using System;
+using System.Diagnostics.Contracts;
 
-namespace VendingMachine.Business
+namespace VendingMachineApp.Business
 {
-    public sealed class Goods
+    public sealed class Goods : IEquatable<Goods>
     {
-        public string Name;
-        public decimal Price;
+        public readonly GoodsIdentity Identity;
+        public readonly decimal Price;
+        public readonly int Count;
 
-        public Goods(string name, decimal price)
+        public Goods(GoodsIdentity identity, decimal price, int count)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(name));
             Contract.Requires(price > decimal.Zero);
+            Contract.Requires(count >= 0);
 
-            Name = name;
+            Identity = identity;
             Price = price;
+            Count = count;
+        }
+
+        public bool Equals(Goods other)
+        {
+            return
+                Identity.Equals(other.Identity) &&
+                Price == other.Price &&
+                Count == other.Count;
         }
     }
 }

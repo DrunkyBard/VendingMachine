@@ -8,8 +8,8 @@
     <ProjectGuid>{92C02571-DD0E-454C-912F-894BB64EB84E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VendingMachine.Tests</RootNamespace>
-    <AssemblyName>VendingMachine.Tests</AssemblyName>
+    <RootNamespace>VendingMachineApp.Tests</RootNamespace>
+    <AssemblyName>VendingMachineApp.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>

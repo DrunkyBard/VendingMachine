@@ -13,8 +13,8 @@
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>VendingMachine</RootNamespace>
-    <AssemblyName>VendingMachine</AssemblyName>
+    <RootNamespace>VendingMachineApp</RootNamespace>
+    <AssemblyName>VendingMachineApp</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
@@ -216,13 +216,23 @@
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Business\BagOfGoods.cs" />
     <Compile Include="Business\Coin.cs" />
-    <Compile Include="Business\Events\FundsRecoveredEvent.cs" />
+    <Compile Include="Business\Events\CoinsRefundedEvent.cs" />
+    <Compile Include="Business\Events\GoodsBuyedEvent.cs" />
+    <Compile Include="Business\Exceptions\GoodsShortageException.cs" />
+    <Compile Include="Business\Exceptions\InsufficientAmountForBuyingGoodsException.cs" />
+    <Compile Include="Business\Exceptions\VendingMachineDoesNotHaveCoinsForRefundException.cs" />
     <Compile Include="Business\Goods.cs" />
+    <Compile Include="Business\GoodsIdentity.cs" />
     <Compile Include="Business\VendingMachine.cs" />
     <Compile Include="Business\Wallet.cs" />
     <Compile Include="Business\Exceptions\InsufficientFundsWithParValueException.cs" />
     <Compile Include="Business\Exceptions\WalletDoesNotHaveCoinsForParValueException.cs" />
+    <Compile Include="Commands\BuyCommand.cs" />
+    <Compile Include="Commands\BuyCommandHandler.cs" />
+    <Compile Include="Commands\RefundCommand.cs" />
+    <Compile Include="Commands\RefundCommandHandler.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -234,6 +244,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="Utils\CollectionExtensions.cs" />
     <Compile Include="Utils\EqualityComparerFactory.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 
-namespace VendingMachine.Business
+namespace VendingMachineApp.Business
 {
     public struct Coin : IEquatable<Coin>
     {

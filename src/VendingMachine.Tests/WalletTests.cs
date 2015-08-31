@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
-using VendingMachine.Business;
-using VendingMachine.Business.Exceptions;
+using VendingMachineApp.Business;
+using VendingMachineApp.Business.Exceptions;
 using Xunit;
 
-namespace VendingMachine.Tests
+namespace VendingMachineApp.Tests
 {
     public sealed class WalletTests
     {

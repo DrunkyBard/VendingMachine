@@ -3,25 +3,29 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using VendingMachine.Business.Exceptions;
+using VendingMachineApp.Business.Exceptions;
+using VendingMachineApp.Utils;
 
-namespace VendingMachine.Business
+namespace VendingMachineApp.Business
 {
     public class Wallet : IEnumerable<Coin>
     {
         private readonly ImmutableHashSet<Coin> _coins;
 
-        public Wallet()
-        {
-            _coins = ImmutableHashSet.Create<Coin>(new CoinEqualityComparer());
-        }
+        public Wallet() : this(Enumerable.Empty<Coin>())
+        {}
 
         public Wallet(IEnumerable<Coin> coins)
         {
+            Contract.Requires(coins != null);
+
+            var coinEqualityComparer = EqualityComparerFactory.Create<Coin>(
+                (c1, c2) => c1.ParValue == c2.ParValue,
+                c => c.ParValue.GetHashCode());
             _coins = coins
                 .GroupBy(c => c.ParValue)
                 .Select(c => c.Aggregate(0, (i, coin) => i + coin.Count, count => new Coin(c.Key, count)))
-                .ToImmutableHashSet(new CoinEqualityComparer());
+                .ToImmutableHashSet(coinEqualityComparer);
         }
 
         public Wallet Put(IReadOnlyCollection<Coin> coins)
@@ -90,13 +94,13 @@ namespace VendingMachine.Business
         [Pure]
         public decimal TotalFunds()
         {
-            return _coins.Aggregate(decimal.Zero, (current, next) => current + next.ParValue * next.Count);
+            return _coins.Aggregate(decimal.Zero, (current, next) => current + next.Total);
         }
 
         [Pure]
         public IReadOnlyCollection<Coin> ShowCoins()
         {
-            return _coins.ToList();
+            return _coins.ToImmutableList();
         }
 
         public IEnumerator<Coin> GetEnumerator()
@@ -107,19 +111,6 @@ namespace VendingMachine.Business
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
-        }
-
-        private class CoinEqualityComparer : IEqualityComparer<Coin>
-        {
-            public bool Equals(Coin x, Coin y)
-            {
-                return x.ParValue == y.ParValue;
-            }
-
-            public int GetHashCode(Coin obj)
-            {
-                return obj.ParValue.GetHashCode();
-            }
         }
     }
 }

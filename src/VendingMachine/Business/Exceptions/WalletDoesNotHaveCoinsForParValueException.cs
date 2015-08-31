@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
 
-namespace VendingMachine.Business.Exceptions
+namespace VendingMachineApp.Business.Exceptions
 {
     public sealed class WalletDoesNotHaveCoinsForParValueException : Exception
     {

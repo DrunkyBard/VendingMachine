@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using VendingMachine.Business;
+using VendingMachineApp.Business;
 
-namespace VendingMachine.Tests
+namespace VendingMachineApp.Tests
 {
     public sealed class WalletTestFixture
     {

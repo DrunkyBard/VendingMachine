@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VendingMachine.Business.Exceptions
+namespace VendingMachineApp.Business.Exceptions
 {
     public sealed class InsufficientFundsWithParValueException : Exception
     {

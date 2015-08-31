@@ -1,7 +1,6 @@
-﻿using System.Web;
-using System.Web.Optimization;
+﻿using System.Web.Optimization;
 
-namespace VendingMachine
+namespace VendingMachineApp
 {
     public class BundleConfig
     {

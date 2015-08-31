@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 
-namespace VendingMachine.Utils
+namespace VendingMachineApp.Utils
 {
     public sealed class EqualityComparerFactory
     {

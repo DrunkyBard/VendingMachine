@@ -1,8 +1,9 @@
 ﻿using Microsoft.Owin;
 using Owin;
+using VendingMachineApp;
 
-[assembly: OwinStartupAttribute(typeof(VendingMachine.Startup))]
-namespace VendingMachine
+[assembly: OwinStartup(typeof(Startup))]
+namespace VendingMachineApp
 {
     public partial class Startup
     {
