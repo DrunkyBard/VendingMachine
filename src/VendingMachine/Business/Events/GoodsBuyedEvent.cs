@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace VendingMachineApp.Business.Events
 {
-    public sealed class GoodsBuyedEvent
+    public sealed class GoodsBuyedEvent : IEvent
     {
         public readonly Wallet UpdatedMachineWallet;
         public readonly Wallet UpdatedBuyerWallet;

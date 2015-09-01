@@ -2,7 +2,7 @@
 
 namespace VendingMachineApp.Business.Events
 {
-    public sealed class CoinsRefundedEvent
+    public sealed class CoinsRefundedEvent : IEvent
     {
         public readonly Wallet VendingMachineWallet;
         public readonly Wallet BuyerWallet;

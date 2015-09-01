@@ -88,6 +88,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
@@ -220,11 +224,13 @@
     <Compile Include="Business\Coin.cs" />
     <Compile Include="Business\Events\CoinsRefundedEvent.cs" />
     <Compile Include="Business\Events\GoodsBuyedEvent.cs" />
+    <Compile Include="Business\Events\IEvent.cs" />
     <Compile Include="Business\Exceptions\GoodsShortageException.cs" />
     <Compile Include="Business\Exceptions\InsufficientAmountForBuyingGoodsException.cs" />
     <Compile Include="Business\Exceptions\VendingMachineDoesNotHaveCoinsForRefundException.cs" />
     <Compile Include="Business\Goods.cs" />
     <Compile Include="Business\GoodsIdentity.cs" />
+    <Compile Include="Business\NullIdentity.cs" />
     <Compile Include="Business\VendingMachine.cs" />
     <Compile Include="Business\Wallet.cs" />
     <Compile Include="Business\Exceptions\InsufficientFundsWithParValueException.cs" />
@@ -236,6 +242,19 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="DataAccess\Core\IEntityFactory.cs" />
+    <Compile Include="DataAccess\Core\IEventCommitter.cs" />
+    <Compile Include="DataAccess\Core\UnitOfWork.cs" />
+    <Compile Include="DataAccess\EF\AutofacUnitOfWork.cs" />
+    <Compile Include="DataAccess\EF\EfContextEntityFactory.cs" />
+    <Compile Include="DataAccess\EF\VendingMachineDbContext.cs" />
+    <Compile Include="DataAccess\EF\VendingMachineEntityFactory.cs" />
+    <Compile Include="DataAccess\EF\VendingMachineEventCommitter.cs" />
+    <Compile Include="DataAccess\Entities\UserEntity.cs" />
+    <Compile Include="DataAccess\Entities\UserVendingMachineAggregationEntity.cs" />
+    <Compile Include="DataAccess\Entities\UserWalletEntity.cs" />
+    <Compile Include="DataAccess\Entities\VendingMachineEntity.cs" />
+    <Compile Include="DataAccess\Entities\VendingMachineWalletEntity.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
