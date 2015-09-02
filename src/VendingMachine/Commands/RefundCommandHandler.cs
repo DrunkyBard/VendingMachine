@@ -1,20 +1,19 @@
-﻿using VendingMachineApp.Business;
+﻿using System;
+using VendingMachineApp.Business;
 using VendingMachineApp.Business.Events;
+using VendingMachineApp.DataAccess.Core;
+using VendingMachineApp.DataAccess.Entities;
 
 namespace VendingMachineApp.Commands
 {
-    public sealed class RefundCommandHandler
+    public sealed class RefundCommandHandler : VendingMachineCommandHandler<BuyCommand, CoinsRefundedEvent>
     {
-        public CoinsRefundedEvent Execute(RefundCommand command)
+        public RefundCommandHandler(Func<UnitOfWork<UserVendingMachineAggregationEntity>> uowFactory) : base(uowFactory)
+        {}
+
+        protected override CoinsRefundedEvent Execute(VendingMachine vendingMachine, BuyCommand command)
         {
-            //Restore aggregate
-
-            var vendingMachine = new VendingMachine(null, null, null);
-            var @event = vendingMachine.Refund(command.Deposit);
-
-            //Save event
-
-            return @event;
+            return vendingMachine.Refund(command.Deposit);
         }
     }
 }

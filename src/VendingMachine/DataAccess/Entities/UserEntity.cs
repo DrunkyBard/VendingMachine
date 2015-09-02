@@ -2,7 +2,7 @@
 
 namespace VendingMachineApp.DataAccess.Entities
 {
-    public sealed class UserEntity
+    public class UserEntity
     {
         public int Id { get; set; }
 

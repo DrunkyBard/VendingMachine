@@ -7,5 +7,7 @@ namespace VendingMachineApp.DataAccess.Entities
         public int Id { get; set; }
 
         public virtual ICollection<VendingMachineWalletEntity> Coins { get; set; }
+
+        public virtual ICollection<GoodsEntity> Goods { get; set; }
     }
 }
