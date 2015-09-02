@@ -137,7 +137,7 @@ namespace VendingMachineApp.Tests
         public void Retrieve_WhenInsufficientFundsInWalletForGivenPar_ThenShouldThrowDoesNotHaveFundsException(int parValue, int coinCount)
         {
             var coin = new Coin(parValue, coinCount);
-            var inWalletCoinCount = new Random().Next(0, coinCount - 1);
+            var inWalletCoinCount = new Random().Next(1, coinCount - 1);
             var inWalletCoin = new Coin(parValue, inWalletCoinCount);
             var wallet = new Wallet(new [] {inWalletCoin});
 

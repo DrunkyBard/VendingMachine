@@ -10,6 +10,7 @@ namespace VendingMachineApp.Business.Exceptions
 
         public GoodsShortageException(Goods goods, int expectedCount)
         {
+            Contract.Requires(goods != null);
             Contract.Requires(expectedCount > goods.Count);
 
             Goods = goods;
