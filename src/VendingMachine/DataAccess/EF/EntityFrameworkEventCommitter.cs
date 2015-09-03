@@ -33,6 +33,13 @@ namespace VendingMachineApp.DataAccess.EF
 
             DbContext.Dispose();
             _disposed = true;
+
+            GC.SuppressFinalize(this);
+        }
+
+        ~EntityFrameworkTrackedEventCommitter()
+        {
+            Dispose();
         }
     }
 
@@ -61,6 +68,13 @@ namespace VendingMachineApp.DataAccess.EF
 
             DbContext.Dispose();
             _disposed = true;
+
+            GC.SuppressFinalize(this);
+        }
+
+        ~EntityFrameworkSimpleEventCommitter()
+        {
+            Dispose();
         }
     }
 }
