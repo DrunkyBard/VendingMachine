@@ -1,26 +1,49 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.Contracts;
+using System.Linq;
+using System.Web.Mvc;
+using VendingMachineApp.Business;
+using VendingMachineApp.Commands;
+using VendingMachineApp.Models;
 
 namespace VendingMachineApp.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly RefundCommandHandler _refundCommandHandler;
+        private readonly BuyCommandHandler _buyCommandHandler;
+
+        public HomeController(RefundCommandHandler refundCommandHandler, BuyCommandHandler buyCommandHandler)
+        {
+            Contract.Requires(refundCommandHandler != null);
+            Contract.Requires(buyCommandHandler != null);
+
+            _refundCommandHandler = refundCommandHandler;
+            _buyCommandHandler = buyCommandHandler;
+        }
+
         public ActionResult Index()
         {
             return View();
         }
 
-        public ActionResult About()
+        public void Refund(IEnumerable<CoinViewModel> deposit)
         {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
+            var depositCoins = deposit
+                .Select(x => new Coin(x.ParValue, x.Count))
+                .ToArray();
+            var command = new RefundCommand(depositCoins);
+            var coinsRefunded = _refundCommandHandler.Execute(command);
         }
 
-        public ActionResult Contact()
+        public void Buy(IEnumerable<CoinViewModel> deposit, Guid goodsIdentity)
         {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
+            var depositCoins = deposit
+                .Select(x => new Coin(x.ParValue, x.Count))
+                .ToArray();
+            var command = new BuyCommand(depositCoins, new GoodsIdentity(goodsIdentity));
+            var goodsBuyed = _buyCommandHandler.Execute(command);
         }
     }
 }
