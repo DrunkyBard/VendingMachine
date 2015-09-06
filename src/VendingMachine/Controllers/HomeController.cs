@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web.Mvc;
 using VendingMachineApp.Business;
 using VendingMachineApp.Commands;
+using VendingMachineApp.DataAccess.Queries;
 using VendingMachineApp.Models;
 
 namespace VendingMachineApp.Controllers
@@ -13,6 +14,11 @@ namespace VendingMachineApp.Controllers
     {
         private readonly RefundCommandHandler _refundCommandHandler;
         private readonly BuyCommandHandler _buyCommandHandler;
+
+        public HomeController()
+        {
+            
+        }
 
         public HomeController(RefundCommandHandler refundCommandHandler, BuyCommandHandler buyCommandHandler)
         {
@@ -25,7 +31,10 @@ namespace VendingMachineApp.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            var query = new ShowVendingMachineQuery();
+            var model = query.Ask();
+
+            return View(model);
         }
 
         public void Refund(IEnumerable<CoinViewModel> deposit)

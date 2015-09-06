@@ -9,7 +9,6 @@ namespace VendingMachineApp
     {
         public void Configuration(IAppBuilder app)
         {
-            ConfigureAuth(app);
         }
     }
 }
