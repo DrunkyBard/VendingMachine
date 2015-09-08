@@ -49,7 +49,7 @@
     <div class="col-md-4">
         <h2>Buyer wallet</h2>
         <div data-bind="foreach: BuyerWallet">
-            <div class="btn btn-block btn-group-lg btn-lg btn-default" data-bind="click: $parent.Deposit, css: {disabled: Count() <= 0}">
+            <div class="btn btn-block btn-group-lg btn-lg btn-default" data-bind="click: $parent.Deposit">
                 <span data-bind="text: ParValue"></span>: <span data-bind="text: Count"></span>
             </div>
             <br>
@@ -59,7 +59,7 @@
         <h2>Deposit</h2>
         <p>
             <div id="deposit" class="btn btn-block btn-group-lg btn-lg btn-default text-center" data-bind="text: DepositTotal"></div>
-            <div id="refundButton" class="btn btn-block btn-group-lg btn-lg btn-default text-center">Refund</div>
+            <div id="refundButton" class="btn btn-block btn-group-lg btn-lg btn-default text-center" data-bind="click: Refund">Refund</div>
         </p>
     </div>
     <div class="col-md-4">
@@ -100,6 +100,20 @@
         this.MachineWallet = ko.observableArray();
         this.AvailableGoods = ko.observableArray();
         this.DepositCoins = ko.observableArray();
+        this.WalletSort = function(l, r) {
+            return l.ParValue() > r.ParValue() ? -1 : 1;
+        }
+        this.UpdateWallets = function(newBuyerWallet, newMachineWallet) {
+            self.BuyerWallet.removeAll();
+            ko.utils.arrayForEach(newBuyerWallet, function (coin) {
+                self.BuyerWallet.push(coin);
+            });
+            self.MachineWallet.removeAll();
+            ko.utils.arrayForEach(newMachineWallet, function (coin) {
+                self.MachineWallet.push(coin);
+            });
+            self.DepositCoins.removeAll();
+        }
 
         this.DepositTotal = ko.computed(function() {
             var total = 0;
@@ -111,17 +125,26 @@
             return total;
         }, this);
 
-        this.Refund = function(coin) {
-            //Ajax call
+        this.Refund = function() {
+            $.post("/Home/Refund", {deposit: ko.mapping.toJS(self.DepositCoins)}, function(coinRefundedEvent) {
+                self.UpdateWallets(coinRefundedEvent.BuyerWallet(), coinRefundedEvent.VendingMachineWallet());
+            });
         }
 
-        this.Deposit = function(coin) {
+        this.Deposit = function (coin) {
             self.DepositCoins.push(new Coin(coin.ParValue(), 1));
             coin.Count(coin.Count() - 1);
+
+            if (coin.Count() === 0) {
+                self.BuyerWallet.remove(coin);
+            }
         }
 
         this.Buy = function(goods) {
-            //Ajax call
+            $.post("/Home/Buy", { deposit: ko.mapping.toJS(self.DepositCoins), goodsIdentity: goods.Identity }, function (goodsBuyedEvent) {
+                self.UpdateWallets(goodsBuyedEvent.UpdatedBuyerWallet(), goodsBuyedEvent.UpdatedMachineWallet());
+                goods.Count(goods.Count() - 1);
+            });
         }
     }
 
