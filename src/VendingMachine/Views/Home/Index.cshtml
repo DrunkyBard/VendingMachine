@@ -1,4 +1,5 @@
-﻿@model VendingMachineApp.Models.VendingMachineViewModel
+﻿@using VendingMachineApp.Utils
+@model VendingMachineApp.Models.VendingMachineViewModel
 
 @{
     ViewBag.Title = "Home Page";
@@ -37,49 +38,107 @@
 </div>
 
 @*Buyer wallet: <br>
-<div >
-    @foreach (var coin in Model.BuyerWallet)
-    {
-        <div id="@string.Format("c_{0}", coin.ParValue)" class="coin btn btn-default">@coin.ParValue: @coin.Count</div><br>
-    }
-</div>*@
+    <div >
+        @foreach (var coin in Model.BuyerWallet)
+        {
+            <div id="@string.Format("c_{0}", coin.ParValue)" class="coin btn btn-default">@coin.ParValue: @coin.Count</div><br>
+        }
+    </div>*@
 
 <div class="row">
     <div class="col-md-4">
         <h2>Buyer wallet</h2>
-        <p>
-            @foreach (var coin in Model.BuyerWallet)
-            {
-                <div id="@string.Format("cb_{0}", coin.ParValue)" class="coin btn btn-block btn-group-lg btn-lg btn-default">@coin.ParValue: @coin.Count</div><br>
-            }
-        </p>
+        <div data-bind="foreach: BuyerWallet">
+            <div class="btn btn-block btn-group-lg btn-lg btn-default" data-bind="click: $parent.Deposit, css: {disabled: Count() <= 0}">
+                <span data-bind="text: ParValue"></span>: <span data-bind="text: Count"></span>
+            </div>
+            <br>
+        </div>
     </div>
     <div class="col-md-4">
         <h2>Deposit</h2>
         <p>
-            <div id="deposit" class="btn btn-block btn-group-lg btn-lg btn-default text-center">0</div>
+            <div id="deposit" class="btn btn-block btn-group-lg btn-lg btn-default text-center" data-bind="text: DepositTotal"></div>
             <div id="refundButton" class="btn btn-block btn-group-lg btn-lg btn-default text-center">Refund</div>
         </p>
     </div>
     <div class="col-md-4">
         <h2>Vending machine wallet</h2>
-        <p>
-            @foreach (var coin in Model.MachineWallet)
-            {
-                <div id="@string.Format("cm_{0}", coin.ParValue)" class="coin btn btn-block btn-group-lg btn-lg btn-default">@coin.ParValue: @coin.Count</div><br>
-            }
-        </p>
+        <div data-bind="foreach: MachineWallet">
+            <div class="coin btn btn-block btn-group-lg btn-lg btn-default disabled">
+                <span data-bind="text: ParValue"></span>: <span data-bind="text: Count"></span>
+            </div>
+            <br>
+        </div>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-4">
         <h2>Available goods</h2>
-        <p>
-            @foreach (var goods in Model.AvailableGoods)
-            {
-                <div id="@string.Format("g_{0}", goods.Identity)" class="coin btn btn-block btn-group-lg btn-lg btn-default">@goods.Name = @goods.Price$, @goods.Count available</div><br>
-            }
-        </p>
+        <div data-bind="foreach: AvailableGoods">
+            <div class="coin btn btn-block btn-group-lg btn-lg btn-default" data-bind="click: $parent.Buy, css: {disabled: Count() <= 0}">
+                <!--goods.Name = goods.Price$, goods.Count available-->
+                <span data-bind="text: Name"></span> = <span data-bind="text: Price"></span>, <span data-bind="text: Count"></span>
+            </div>
+            <br>
+        </div>
     </div>
 </div>
+<script type="text/javascript" src="~/Scripts/knockout-3.3.0.debug.js"></script>
+<script type="text/javascript" src="~/Scripts/knockout.mapping-latest.debug.js"></script>
+
+<script type="text/javascript">
+    function Coin(parValue, count) {
+        this.ParValue = ko.observable(parValue);
+        this.Count = ko.observable(count);
+    }
+
+    function VendingMachineViewModel() {
+        var self = this;
+        this.BuyerWallet = ko.observableArray();
+        this.MachineWallet = ko.observableArray();
+        this.AvailableGoods = ko.observableArray();
+        this.DepositCoins = ko.observableArray();
+
+        this.DepositTotal = ko.computed(function() {
+            var total = 0;
+            ko.utils.arrayForEach(self.DepositCoins(), function(coin) {
+                var value = coin.ParValue() * coin.Count();
+                total += value;
+            });
+
+            return total;
+        }, this);
+
+        this.Refund = function(coin) {
+            //Ajax call
+        }
+
+        this.Deposit = function(coin) {
+            self.DepositCoins.push(new Coin(coin.ParValue(), 1));
+            coin.Count(coin.Count() - 1);
+        }
+
+        this.Buy = function(goods) {
+            //Ajax call
+        }
+    }
+
+    $(function() {
+        var vm = new VendingMachineViewModel();
+        var tempVm = ko.mapping.fromJS(@Html.Raw(Model.ToJson()));
+
+        ko.utils.arrayForEach(tempVm.BuyerWallet(), function(coin) {
+            vm.BuyerWallet.push(coin);
+        });
+        ko.utils.arrayForEach(tempVm.MachineWallet(), function(coin) {
+            vm.MachineWallet.push(coin);
+        });
+        ko.utils.arrayForEach(tempVm.AvailableGoods(), function(coin) {
+            vm.AvailableGoods.push(coin);
+        });
+
+        ko.applyBindings(vm);
+    });
+</script>
