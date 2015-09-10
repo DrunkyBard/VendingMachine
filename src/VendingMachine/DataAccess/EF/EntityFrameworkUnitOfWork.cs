@@ -21,7 +21,14 @@ namespace VendingMachineApp.DataAccess.EF
 
         public override TEntity Get<TIdentity>(TIdentity identity)
         {
-            return TrackedEntity ?? _childScope.Resolve<IEntityFactory<TEntity, TIdentity>>().Create(identity);
+            if (TrackedEntity != null)
+            {
+                return TrackedEntity;
+            }
+
+            TrackedEntity = _childScope.Resolve<IEntityFactory<TEntity, TIdentity>>().Create(identity);
+
+            return TrackedEntity;
         }
 
         public override void Commit<TEvent>(TEvent @event)

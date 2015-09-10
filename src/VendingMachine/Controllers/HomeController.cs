@@ -4,6 +4,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Web.Mvc;
 using VendingMachineApp.Business;
+using VendingMachineApp.Business.Events;
 using VendingMachineApp.Commands;
 using VendingMachineApp.DataAccess.Queries;
 using VendingMachineApp.Models;
@@ -14,11 +15,6 @@ namespace VendingMachineApp.Controllers
     {
         private readonly RefundCommandHandler _refundCommandHandler;
         private readonly BuyCommandHandler _buyCommandHandler;
-
-        public HomeController()
-        {
-            
-        }
 
         public HomeController(RefundCommandHandler refundCommandHandler, BuyCommandHandler buyCommandHandler)
         {
@@ -37,13 +33,14 @@ namespace VendingMachineApp.Controllers
             return View(model);
         }
 
-        public void Refund(IEnumerable<CoinViewModel> deposit)
+        public CoinsRefundedEvent Refund(IEnumerable<CoinViewModel> deposit)
         {
             var depositCoins = deposit
                 .Select(x => new Coin(x.ParValue, x.Count))
                 .ToArray();
             var command = new RefundCommand(depositCoins);
-            var coinsRefunded = _refundCommandHandler.Execute(command);
+
+            return _refundCommandHandler.Execute(command);
         }
 
         public void Buy(IEnumerable<CoinViewModel> deposit, Guid goodsIdentity)

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using System.Linq;
+using VendingMachineApp.DataAccess.EF;
+using VendingMachineApp.DataAccess.Entities;
 using VendingMachineApp.Models;
 
 namespace VendingMachineApp.DataAccess.Queries
@@ -7,49 +9,38 @@ namespace VendingMachineApp.DataAccess.Queries
     {
         public VendingMachineViewModel Ask()
         {
-            var goods = new[]
+            using (var dbContext = new VendingMachineDbContext())
             {
-                new GoodsViewModel
-                {
-                    Identity = Guid.NewGuid(),
-                    Name = "A",
-                    Count = 2,
-                    Price = 1
-                },
-                new GoodsViewModel
-                {
-                    Identity = Guid.NewGuid(),
-                    Name = "B",
-                    Count = 3,
-                    Price = 5
-                }
-            };
+                var vMachine = dbContext.Set<VendingMachineEntity>().Single();
+                var buyer = dbContext.Set<UserEntity>().Single();
+                var vMachineWallet = vMachine.Coins
+                    .Select(c => new CoinViewModel
+                    {
+                        ParValue = c.FaceValue,
+                        Count = c.Count
+                    }).ToList();
+                var buyerWallet = buyer.Coins
+                    .Select(c => new CoinViewModel
+                    {
+                        ParValue = c.FaceValue,
+                        Count = c.Count
+                    }).ToList();
+                var availableGoods = vMachine.Goods
+                    .Select(g => new GoodsViewModel
+                    {
+                        Identity = g.Id,
+                        Name = g.Name,
+                        Price = g.Price,
+                        Count = g.Count
+                    }).ToList();
 
-            var buyerWallet = new[]
-            {
-                new CoinViewModel
+                return new VendingMachineViewModel
                 {
-                    Count = 1,
-                    ParValue = 2
-                },
-                new CoinViewModel
-                {
-                    Count = 3,
-                    ParValue = 5
-                },
-                new CoinViewModel
-                {
-                    Count = 7,
-                    ParValue = 10
-                }, 
-            };
-
-            return new VendingMachineViewModel
-            {
-                AvailableGoods = goods,
-                BuyerWallet = buyerWallet,
-                MachineWallet = buyerWallet
-            };
+                    AvailableGoods = availableGoods,
+                    BuyerWallet = buyerWallet,
+                    MachineWallet = vMachineWallet
+                };
+            }
         }
     }
 }

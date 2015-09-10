@@ -92,6 +92,10 @@
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Autofac.Integration.Mvc, Version=3.3.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.Mvc5.3.3.4\lib\net45\Autofac.Integration.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
@@ -237,11 +241,14 @@
     <Compile Include="Commands\BuyCommandHandler.cs" />
     <Compile Include="Commands\RefundCommand.cs" />
     <Compile Include="Commands\RefundCommandHandler.cs" />
+    <Compile Include="Commands\TypeRegistrationModule.cs" />
     <Compile Include="Commands\VendingMachineCommandHandler.cs" />
+    <Compile Include="CompositionRoot.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="DataAccess\Core\IEntityFactory.cs" />
     <Compile Include="DataAccess\Core\IEventCommitter.cs" />
     <Compile Include="DataAccess\Core\UnitOfWork.cs" />
+    <Compile Include="DataAccess\EF\DatabaseInitializer.cs" />
     <Compile Include="DataAccess\EF\EntityFrameworkEventCommitter.cs" />
     <Compile Include="DataAccess\EF\EntityFrameworkUnitOfWork.cs" />
     <Compile Include="DataAccess\EF\EfContextEntityFactory.cs" />
@@ -257,6 +264,7 @@
     <Compile Include="DataAccess\Entities\VendingMachineWalletEntity.cs" />
     <Compile Include="DataAccess\Queries\ShowVendingMachineQuery.cs" />
     <Compile Include="DataAccess\Queries\ShowVendingMachineQueryCriteria.cs" />
+    <Compile Include="DataAccess\TypeRegistrationModule.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
