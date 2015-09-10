@@ -106,11 +106,11 @@
         this.UpdateWallets = function(newBuyerWallet, newMachineWallet) {
             self.BuyerWallet.removeAll();
             ko.utils.arrayForEach(newBuyerWallet, function (coin) {
-                self.BuyerWallet.push(coin);
+                self.BuyerWallet.push(new Coin(coin.ParValue, coin.Count));
             });
             self.MachineWallet.removeAll();
             ko.utils.arrayForEach(newMachineWallet, function (coin) {
-                self.MachineWallet.push(coin);
+                self.MachineWallet.push(new Coin(coin.ParValue, coin.Count));
             });
             self.DepositCoins.removeAll();
         }
@@ -127,7 +127,7 @@
 
         this.Refund = function() {
             $.post("/Home/Refund", {deposit: ko.mapping.toJS(self.DepositCoins)}, function(coinRefundedEvent) {
-                self.UpdateWallets(coinRefundedEvent.BuyerWallet(), coinRefundedEvent.VendingMachineWallet());
+                self.UpdateWallets(coinRefundedEvent.BuyerWallet, coinRefundedEvent.VendingMachineWallet);
             });
         }
 
@@ -142,14 +142,14 @@
 
         this.Buy = function(goods) {
             $.post("/Home/Buy", { deposit: ko.mapping.toJS(self.DepositCoins), goodsIdentity: goods.Identity }, function (goodsBuyedEvent) {
-                self.UpdateWallets(goodsBuyedEvent.UpdatedBuyerWallet(), goodsBuyedEvent.UpdatedMachineWallet());
+                self.UpdateWallets(goodsBuyedEvent.UpdatedBuyerWallet, goodsBuyedEvent.UpdatedMachineWallet);
                 goods.Count(goods.Count() - 1);
             });
         }
     }
+    var vm = new VendingMachineViewModel();
 
     $(function() {
-        var vm = new VendingMachineViewModel();
         var tempVm = ko.mapping.fromJS(@Html.Raw(Model.ToJson()));
 
         ko.utils.arrayForEach(tempVm.BuyerWallet(), function(coin) {

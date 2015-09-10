@@ -33,14 +33,16 @@ namespace VendingMachineApp.Controllers
             return View(model);
         }
 
-        public CoinsRefundedEvent Refund(IEnumerable<CoinViewModel> deposit)
+        public JsonResult Refund(IEnumerable<CoinViewModel> deposit)
         {
             var depositCoins = deposit
                 .Select(x => new Coin(x.ParValue, x.Count))
                 .ToArray();
             var command = new RefundCommand(depositCoins);
 
-            return _refundCommandHandler.Execute(command);
+            var @event = _refundCommandHandler.Execute(command);
+
+            return Json(@event);
         }
 
         public void Buy(IEnumerable<CoinViewModel> deposit, Guid goodsIdentity)

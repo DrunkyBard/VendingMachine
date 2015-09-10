@@ -25,6 +25,7 @@ namespace VendingMachineApp.DataAccess.EF
         private void UpdateWallets(VendingMachineEntity vMachine, UserEntity user, Wallet vendingMachineWallet, Wallet buyerWallet)
         {
             DbContext.Set<VendingMachineWalletEntity>().RemoveRange(vMachine.Coins);
+            DbContext.Set<UserWalletEntity>().RemoveRange(user.Coins);
 
             var updatedVMachineWallet = vendingMachineWallet
                 .Select(x => new VendingMachineWalletEntity
