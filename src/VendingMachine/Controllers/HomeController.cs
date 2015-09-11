@@ -4,9 +4,10 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Web.Mvc;
 using VendingMachineApp.Business;
-using VendingMachineApp.Business.Events;
+using VendingMachineApp.Business.Exceptions;
 using VendingMachineApp.Commands;
 using VendingMachineApp.DataAccess.Queries;
+using VendingMachineApp.Filters;
 using VendingMachineApp.Models;
 
 namespace VendingMachineApp.Controllers
@@ -25,33 +26,46 @@ namespace VendingMachineApp.Controllers
             _buyCommandHandler = buyCommandHandler;
         }
 
+        [HttpGet]
+        [ExceptionFilter]
         public ActionResult Index()
         {
+            throw new Exception("ASD");
             var query = new ShowVendingMachineQuery();
             var model = query.Ask();
 
             return View(model);
         }
 
+        [HttpPost]
         public JsonResult Refund(IEnumerable<CoinViewModel> deposit)
         {
+            Contract.Requires(deposit != null);
+
             var depositCoins = deposit
                 .Select(x => new Coin(x.ParValue, x.Count))
                 .ToArray();
             var command = new RefundCommand(depositCoins);
-
             var @event = _refundCommandHandler.Execute(command);
 
             return Json(@event);
         }
 
-        public void Buy(IEnumerable<CoinViewModel> deposit, Guid goodsIdentity)
+        [HttpPost]
+        [ExceptionFilter(
+            typeof(InsufficientAmountForBuyingGoodsException), 
+            typeof(VendingMachineDoesNotHaveCoinsForRefundException))]
+        public JsonResult Buy(IEnumerable<CoinViewModel> deposit, Guid goodsIdentity)
         {
+            Contract.Requires(deposit != null);
+
             var depositCoins = deposit
                 .Select(x => new Coin(x.ParValue, x.Count))
                 .ToArray();
             var command = new BuyCommand(depositCoins, new GoodsIdentity(goodsIdentity));
-            var goodsBuyed = _buyCommandHandler.Execute(command);
+            var @event = _buyCommandHandler.Execute(command);
+
+            return Json(@event);
         }
     }
 }

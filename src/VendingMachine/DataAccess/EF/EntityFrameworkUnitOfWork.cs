@@ -58,7 +58,11 @@ namespace VendingMachineApp.DataAccess.EF
         {
             if (_isDisposed) return;
 
-            _eventCommitter.Dispose();
+            if (_eventCommitter != null)
+            {
+                _eventCommitter.Dispose();
+            }
+
             _childScope.Dispose();
             _isDisposed = true;
         }

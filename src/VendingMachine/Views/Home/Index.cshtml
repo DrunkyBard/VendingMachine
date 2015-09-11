@@ -5,46 +5,6 @@
     ViewBag.Title = "Home Page";
 }
 
-<div class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <span class="navbar-brand">Buyer wallet: </span>
-        </div>
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                @foreach (var coin in Model.BuyerWallet)
-                {
-                    <li>
-                        <a>@coin.ParValue: @coin.Count</a>
-                    </li>
-                }
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li><span class="navbar-brand">Vending machine wallet: </span></li>
-                @foreach (var coin in Model.BuyerWallet)
-                {
-                    <li>
-                        <a>@coin.ParValue: @coin.Count</a>
-                    </li>
-                }
-            </ul>
-        </div>
-    </div>
-</div>
-
-@*Buyer wallet: <br>
-    <div >
-        @foreach (var coin in Model.BuyerWallet)
-        {
-            <div id="@string.Format("c_{0}", coin.ParValue)" class="coin btn btn-default">@coin.ParValue: @coin.Count</div><br>
-        }
-    </div>*@
-
 <div class="row">
     <div class="col-md-4">
         <h2>Buyer wallet</h2>
@@ -85,80 +45,26 @@
         </div>
     </div>
 </div>
+
 <script type="text/javascript" src="~/Scripts/knockout-3.3.0.debug.js"></script>
 <script type="text/javascript" src="~/Scripts/knockout.mapping-latest.debug.js"></script>
+<script type="text/javascript" src="~/Scripts/bootbox.js"></script>
+<script type="text/javascript" src="~/Scripts/ViewModels/VendingMachineViewModel.js"></script>
+<script type="text/javascript" src="~/Scripts/ViewModels/CoinViewModel.js"></script>
 
 <script type="text/javascript">
-    function Coin(parValue, count) {
-        this.ParValue = ko.observable(parValue);
-        this.Count = ko.observable(count);
-    }
-
-    function VendingMachineViewModel() {
-        var self = this;
-        this.BuyerWallet = ko.observableArray();
-        this.MachineWallet = ko.observableArray();
-        this.AvailableGoods = ko.observableArray();
-        this.DepositCoins = ko.observableArray();
-        this.WalletSort = function(l, r) {
-            return l.ParValue() > r.ParValue() ? -1 : 1;
-        }
-        this.UpdateWallets = function(newBuyerWallet, newMachineWallet) {
-            self.BuyerWallet.removeAll();
-            ko.utils.arrayForEach(newBuyerWallet, function (coin) {
-                self.BuyerWallet.push(new Coin(coin.ParValue, coin.Count));
-            });
-            self.MachineWallet.removeAll();
-            ko.utils.arrayForEach(newMachineWallet, function (coin) {
-                self.MachineWallet.push(new Coin(coin.ParValue, coin.Count));
-            });
-            self.DepositCoins.removeAll();
-        }
-
-        this.DepositTotal = ko.computed(function() {
-            var total = 0;
-            ko.utils.arrayForEach(self.DepositCoins(), function(coin) {
-                var value = coin.ParValue() * coin.Count();
-                total += value;
-            });
-
-            return total;
-        }, this);
-
-        this.Refund = function() {
-            $.post("/Home/Refund", {deposit: ko.mapping.toJS(self.DepositCoins)}, function(coinRefundedEvent) {
-                self.UpdateWallets(coinRefundedEvent.BuyerWallet, coinRefundedEvent.VendingMachineWallet);
-            });
-        }
-
-        this.Deposit = function (coin) {
-            self.DepositCoins.push(new Coin(coin.ParValue(), 1));
-            coin.Count(coin.Count() - 1);
-
-            if (coin.Count() === 0) {
-                self.BuyerWallet.remove(coin);
-            }
-        }
-
-        this.Buy = function(goods) {
-            $.post("/Home/Buy", { deposit: ko.mapping.toJS(self.DepositCoins), goodsIdentity: goods.Identity }, function (goodsBuyedEvent) {
-                self.UpdateWallets(goodsBuyedEvent.UpdatedBuyerWallet, goodsBuyedEvent.UpdatedMachineWallet);
-                goods.Count(goods.Count() - 1);
-            });
-        }
-    }
     var vm = new VendingMachineViewModel();
 
-    $(function() {
+    $(function () {
         var tempVm = ko.mapping.fromJS(@Html.Raw(Model.ToJson()));
 
-        ko.utils.arrayForEach(tempVm.BuyerWallet(), function(coin) {
+        ko.utils.arrayForEach(tempVm.BuyerWallet(), function (coin) {
             vm.BuyerWallet.push(coin);
         });
-        ko.utils.arrayForEach(tempVm.MachineWallet(), function(coin) {
+        ko.utils.arrayForEach(tempVm.MachineWallet(), function (coin) {
             vm.MachineWallet.push(coin);
         });
-        ko.utils.arrayForEach(tempVm.AvailableGoods(), function(coin) {
+        ko.utils.arrayForEach(tempVm.AvailableGoods(), function (coin) {
             vm.AvailableGoods.push(coin);
         });
 

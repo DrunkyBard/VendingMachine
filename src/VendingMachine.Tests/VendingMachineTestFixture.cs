@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using VendingMachineApp.Business;
 
 namespace VendingMachineApp.Tests
@@ -238,6 +239,76 @@ namespace VendingMachineApp.Tests
                     new Coin(5, 1)
                 },
                 buyedGoods
+            };
+        }
+
+        public static IEnumerable<object[]> BuyGoodsWithSufficientAmountAndVendingMachineCannotRefundFixture()
+        {
+            var buyedGoods = new Goods(new GoodsIdentity(Guid.NewGuid()), 35, 15);
+
+            yield return new object[]
+            {
+                new Wallet(new[] {new Coin(1, 100), new Coin(2, 100), new Coin(5, 100), new Coin(10, 100)}),  // Given Buyer wallet
+                new Wallet(Enumerable.Empty<Coin>()),                                                         // Given Machine wallet
+                new[]                                                                                         // Available goods
+                {
+                    new Goods(new GoodsIdentity(Guid.NewGuid()), 13, 10),
+                    new Goods(new GoodsIdentity(Guid.NewGuid()), 18, 20),
+                    new Goods(new GoodsIdentity(Guid.NewGuid()), 21, 20),
+                    buyedGoods
+                },
+                new[]                                                                                         // Deposited amount
+                {
+                    new Coin(10, 4)
+                },
+                buyedGoods,                                                                                   // Buyed goods
+                new Wallet(new [] {new Coin(10, 4)}),                                                         // Machine wallet after deposit
+                5                                                                                             // Expected refund
+            };
+
+            buyedGoods = new Goods(new GoodsIdentity(Guid.NewGuid()), 21, 20);
+
+            yield return new object[]
+            {
+                new Wallet(new[] {new Coin(1, 100), new Coin(2, 100), new Coin(5, 100), new Coin(10, 100)}),
+                new Wallet(Enumerable.Empty<Coin>()),
+                new[]
+                {
+                    new Goods(new GoodsIdentity(Guid.NewGuid()), 13, 10),
+                    new Goods(new GoodsIdentity(Guid.NewGuid()), 18, 20),
+                    buyedGoods,
+                    new Goods(new GoodsIdentity(Guid.NewGuid()), 35, 15)
+                },
+                new[]
+                {
+                    new Coin(10, 2),
+                    new Coin(5, 1)
+                },
+                buyedGoods,
+                new Wallet(new [] { new Coin(10, 2), new Coin(5, 1) }),
+                4
+            };
+
+            buyedGoods = new Goods(new GoodsIdentity(Guid.NewGuid()), 13, 10);
+
+            yield return new object[]
+            {
+                new Wallet(new[] {new Coin(1, 100), new Coin(2, 100), new Coin(5, 100), new Coin(10, 100)}),
+                new Wallet(Enumerable.Empty<Coin>()),
+                new[]
+                {
+                    buyedGoods,
+                    new Goods(new GoodsIdentity(Guid.NewGuid()), 18, 20),
+                    new Goods(new GoodsIdentity(Guid.NewGuid()), 21, 20),
+                    new Goods(new GoodsIdentity(Guid.NewGuid()), 35, 15)
+                },
+                new[]
+                {
+                    new Coin(5, 3)
+                },
+                buyedGoods,
+                new Wallet(new[] {new Coin(5, 3)}),
+                2
             };
         }
     }

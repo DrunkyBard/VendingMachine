@@ -10,7 +10,7 @@ namespace VendingMachineApp.Tests
     public sealed class VendingMachineTests
     {
         [Fact]
-        public void RecoverFunds_WhenBuyerWantsRecoverZeroAmount_ThenVendingMachineShouldPreventRecoverOperation()
+        public void Refund_WhenBuyerWantsRefundZeroAmount_ThenVendingMachineShouldPreventRefundOperation()
         {
             var machineWallet = new Wallet();
             var buyerWallet = new Wallet();
@@ -26,7 +26,7 @@ namespace VendingMachineApp.Tests
 
         [Theory]
         [MemberData("RecoverDepositedAmountFixture", MemberType = typeof(VendingMachineTestFixture))]
-        public void RecoverFunds_WhenBuyerWantsRecoverDepositedAmount_ThenVendingMachineShouldRecoverFundsWithLessCoins(
+        public void Refund_WhenBuyerWantsRefundDepositedAmount_ThenVendingMachineShouldRefundWithLessCoins(
             Wallet machineWallet,
             Wallet buyerWallet,
             IReadOnlyCollection<Coin> depositedAmount,
@@ -140,6 +140,25 @@ namespace VendingMachineApp.Tests
 
             Assert.True(ex.Goods.Equals(buyedGoods));
             Assert.True(ex.ExpectedCount == 1);
+        }
+
+        [Theory]
+        [MemberData("BuyGoodsWithSufficientAmountAndVendingMachineCannotRefundFixture", MemberType = typeof(VendingMachineTestFixture))]
+        public void WhenBuyGoodsWithSufficientAmount_AndMachineCannotRefund_ThenVendingMachineShouldThrowVendingMachineDoesNotHaveCoinsForRefundException(
+            Wallet givenBuyerWallet,
+            Wallet givenMachineWallet,
+            IList<Goods> availableGoods,
+            IReadOnlyCollection<Coin> depositedAmount,
+            Goods buyedGoods,
+            Wallet expectedMachineWalletAfterDeposit,
+            decimal expectedRefund)
+        {
+            var vendingMachine = CreateMachine(givenMachineWallet, givenBuyerWallet, availableGoods);
+
+            var ex = Assert.Throws<VendingMachineDoesNotHaveCoinsForRefundException>(() => vendingMachine.BuyGoods(depositedAmount, buyedGoods.Identity));
+
+            Assert.Equal(ex.MachineWallet.ShowCoins().OrderByDescending(x => x.ParValue), expectedMachineWalletAfterDeposit.ShowCoins().OrderByDescending(x => x.ParValue));
+            Assert.True(ex.RefundAmount == expectedRefund);
         }
 
         private VendingMachine CreateMachine(Wallet machineWallet, Wallet buyerWallet, IList<Goods> goods = null)
