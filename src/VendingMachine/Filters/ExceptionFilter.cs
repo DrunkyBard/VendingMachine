@@ -30,7 +30,7 @@ namespace VendingMachineApp.Filters
             }
             else
             {
-                filterContext.Result = new RedirectToRouteResult("/Error/Index", new RouteValueDictionary { { "message", errorMessage } });
+                filterContext.Result = new RedirectToRouteResult("ErrorPage", new RouteValueDictionary { { "message", errorMessage } });
             }
         }
     }

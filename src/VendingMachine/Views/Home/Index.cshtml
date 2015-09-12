@@ -7,26 +7,26 @@
 
 <div class="row">
     <div class="col-md-4">
-        <h2>Buyer wallet</h2>
+        <h2>Кошелек пользователя</h2>
         <div data-bind="foreach: BuyerWallet">
             <div class="btn btn-block btn-group-lg btn-lg btn-default" data-bind="click: $parent.Deposit">
-                <span data-bind="text: ParValue"></span>: <span data-bind="text: Count"></span>
+                <span data-bind="text: ParValue"></span> руб = <span data-bind="text: Count"></span> штук
             </div>
             <br>
         </div>
     </div>
     <div class="col-md-4">
-        <h2>Deposit</h2>
+        <h2>Внесенная сумма</h2>
         <p>
             <div id="deposit" class="btn btn-block btn-group-lg btn-lg btn-default text-center" data-bind="text: DepositTotal"></div>
-            <div id="refundButton" class="btn btn-block btn-group-lg btn-lg btn-default text-center" data-bind="click: Refund">Refund</div>
+            <div id="refundButton" class="btn btn-block btn-group-lg btn-lg btn-default text-center" data-bind="click: Refund">Сдача</div>
         </p>
     </div>
     <div class="col-md-4">
-        <h2>Vending machine wallet</h2>
+        <h2>Кошелек аппарата</h2>
         <div data-bind="foreach: MachineWallet">
             <div class="coin btn btn-block btn-group-lg btn-lg btn-default disabled">
-                <span data-bind="text: ParValue"></span>: <span data-bind="text: Count"></span>
+                <span data-bind="text: ParValue"></span> руб = <span data-bind="text: Count"></span> штук
             </div>
             <br>
         </div>
@@ -35,11 +35,10 @@
 
 <div class="row">
     <div class="col-md-4">
-        <h2>Available goods</h2>
+        <h2>Ассортимент товара</h2>
         <div data-bind="foreach: AvailableGoods">
             <div class="coin btn btn-block btn-group-lg btn-lg btn-default" data-bind="click: $parent.Buy, css: {disabled: Count() <= 0}">
-                <!--goods.Name = goods.Price$, goods.Count available-->
-                <span data-bind="text: Name"></span> = <span data-bind="text: Price"></span>, <span data-bind="text: Count"></span>
+                <span data-bind="text: Name"></span> = <span data-bind="text: Price"></span> руб, <span data-bind="text: Count"></span> порций
             </div>
             <br>
         </div>

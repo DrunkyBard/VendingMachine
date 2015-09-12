@@ -61,7 +61,7 @@ namespace VendingMachineApp.App_Data {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to abc.
+        ///   Looks up a localized string similar to Данного товара нет в наличии..
         /// </summary>
         internal static string GoodsShortageException {
             get {
@@ -79,7 +79,7 @@ namespace VendingMachineApp.App_Data {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unknown Error.
+        ///   Looks up a localized string similar to Unknown Error. Please contact with system administrator..
         /// </summary>
         internal static string UnknownError {
             get {
@@ -88,7 +88,7 @@ namespace VendingMachineApp.App_Data {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to fgh.
+        ///   Looks up a localized string similar to Аппарат не имеет достаточно монет для осуществления сдачи. Произведен возврат средств..
         /// </summary>
         internal static string VendingMachineDoesNotHaveCoinsForRefundException {
             get {

@@ -30,7 +30,6 @@ namespace VendingMachineApp.Controllers
         [ExceptionFilter]
         public ActionResult Index()
         {
-            throw new Exception("ASD");
             var query = new ShowVendingMachineQuery();
             var model = query.Ask();
 
@@ -58,11 +57,14 @@ namespace VendingMachineApp.Controllers
         public JsonResult Buy(IEnumerable<CoinViewModel> deposit, Guid goodsIdentity)
         {
             Contract.Requires(deposit != null);
+            Contract.Requires(goodsIdentity != default(Guid));
 
             var depositCoins = deposit
                 .Select(x => new Coin(x.ParValue, x.Count))
                 .ToArray();
-            var command = new BuyCommand(depositCoins, new GoodsIdentity(goodsIdentity));
+            var goods = new GoodsIdentity(goodsIdentity);
+            Contract.Assume(!goods.Equals(default(GoodsIdentity)));
+            var command = new BuyCommand(depositCoins, goods);
             var @event = _buyCommandHandler.Execute(command);
 
             return Json(@event);

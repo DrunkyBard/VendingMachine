@@ -118,15 +118,15 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="GoodsShortageException" xml:space="preserve">
-    <value>abc</value>
+    <value>Данного товара нет в наличии.</value>
   </data>
   <data name="InsufficientAmountForBuyingGoodsException" xml:space="preserve">
     <value>Недостаточно средств.</value>
   </data>
   <data name="UnknownError" xml:space="preserve">
-    <value>Unknown Error</value>
+    <value>Unknown Error. Please contact with system administrator.</value>
   </data>
   <data name="VendingMachineDoesNotHaveCoinsForRefundException" xml:space="preserve">
-    <value>fgh</value>
+    <value>Аппарат не имеет достаточно монет для осуществления сдачи. Произведен возврат средств.</value>
   </data>
 </root>

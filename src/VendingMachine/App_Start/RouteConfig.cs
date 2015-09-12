@@ -14,6 +14,12 @@ namespace VendingMachineApp
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
+
+            routes.MapRoute(
+                name: "ErrorPage",
+                url: "Error/Index",
+                defaults: new { controller = "Error", action = "Index"}
+            );
         }
     }
 }
