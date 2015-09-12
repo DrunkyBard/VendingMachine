@@ -123,6 +123,9 @@
   <data name="InsufficientAmountForBuyingGoodsException" xml:space="preserve">
     <value>Недостаточно средств.</value>
   </data>
+  <data name="NoDepositForRefundException" xml:space="preserve">
+    <value>Для возврата средств необходимо внести некоторую сумму.</value>
+  </data>
   <data name="UnknownError" xml:space="preserve">
     <value>Unknown Error. Please contact with system administrator.</value>
   </data>

@@ -79,6 +79,15 @@ namespace VendingMachineApp.App_Data {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Для возврата средств необходимо внести некоторую сумму..
+        /// </summary>
+        internal static string NoDepositForRefundException {
+            get {
+                return ResourceManager.GetString("NoDepositForRefundException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unknown Error. Please contact with system administrator..
         /// </summary>
         internal static string UnknownError {

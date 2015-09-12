@@ -26,8 +26,12 @@ namespace VendingMachineApp.Business
         public CoinsRefundedEvent Refund(IReadOnlyCollection<Coin> depositedAmount)
         {
             Contract.Requires(depositedAmount != null);
-            Contract.Requires(depositedAmount.Any());
+            if (!depositedAmount.Any())
+            {
+                throw new NoDepositForRefundException();
+            }
             Contract.Ensures(Contract.Result<CoinsRefundedEvent>() != null);
+            Contract.EndContractBlock();
 
             var total = depositedAmount.Aggregate(decimal.Zero, (current, coin) => current + coin.Total);
             _vendingMachineWallet = _vendingMachineWallet.Put(depositedAmount);

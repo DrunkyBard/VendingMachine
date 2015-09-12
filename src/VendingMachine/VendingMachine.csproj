@@ -234,6 +234,7 @@
     <Compile Include="Business\Events\IEvent.cs" />
     <Compile Include="Business\Exceptions\GoodsShortageException.cs" />
     <Compile Include="Business\Exceptions\InsufficientAmountForBuyingGoodsException.cs" />
+    <Compile Include="Business\Exceptions\NoDepositForRefundException.cs" />
     <Compile Include="Business\Exceptions\VendingMachineDoesNotHaveCoinsForRefundException.cs" />
     <Compile Include="Business\Goods.cs" />
     <Compile Include="Business\GoodsIdentity.cs" />

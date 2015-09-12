@@ -37,6 +37,7 @@ namespace VendingMachineApp.Controllers
         }
 
         [HttpPost]
+        [ExceptionFilter(typeof(NoDepositForRefundException))]
         public JsonResult Refund(IEnumerable<CoinViewModel> deposit)
         {
             Contract.Requires(deposit != null);

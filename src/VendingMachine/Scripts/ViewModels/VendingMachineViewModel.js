@@ -30,7 +30,7 @@
     }, this);
 
     this.Refund = function () {
-        $.post("/Home/Refund", { deposit: ko.mapping.toJS(self.DepositCoins) }, function (coinRefundedEvent) {
+        $.post("/Home/Refund", { deposit: self.SerializeDeposit() }, function (coinRefundedEvent) {
             if (coinRefundedEvent.Error) {
                 bootbox.alert(coinRefundedEvent.Message);
 
@@ -50,8 +50,17 @@
         }
     }
 
+    this.SerializeDeposit = function() {
+        var depositDto = [];
+        ko.utils.arrayForEach(self.DepositCoins(), function (coin) {
+            depositDto.push(new CoinDto(coin.ParValue(), coin.Count()));
+        });
+
+        return ko.mapping.toJSON(depositDto);
+    }
+
     this.Buy = function (goods) {
-        $.post("/Home/Buy", { deposit: ko.mapping.toJS(self.DepositCoins), goodsIdentity: goods.Identity }, function (goodsBuyedEvent) {
+        $.post("/Home/Buy", { deposit: self.SerializeDeposit(), goodsIdentity: goods.Identity }, function (goodsBuyedEvent) {
             if (goodsBuyedEvent.Error) {
                 bootbox.alert(goodsBuyedEvent.Message, function () {
                     if (goodsBuyedEvent.ErrorType === "VendingMachineDoesNotHaveCoinsForRefundException") {

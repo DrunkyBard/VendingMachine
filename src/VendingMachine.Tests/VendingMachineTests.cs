@@ -10,18 +10,13 @@ namespace VendingMachineApp.Tests
     public sealed class VendingMachineTests
     {
         [Fact]
-        public void Refund_WhenBuyerWantsRefundZeroAmount_ThenVendingMachineShouldPreventRefundOperation()
+        public void Refund_WhenBuyerWantsRefundZeroAmount_ThenVendingMachineShouldThrowNoDepositForRefundException()
         {
             var machineWallet = new Wallet();
             var buyerWallet = new Wallet();
             var vendingMachine = CreateMachine(machineWallet, buyerWallet);
-            Contract.ContractFailed += (sender, args) =>
-            {
-                Assert.True(args.FailureKind == ContractFailureKind.Precondition);
-                args.SetHandled();
-            };
 
-            vendingMachine.Refund(Enumerable.Empty<Coin>().ToList());
+            Assert.Throws<NoDepositForRefundException>(() => vendingMachine.Refund(Enumerable.Empty<Coin>().ToList()));
         }
 
         [Theory]
