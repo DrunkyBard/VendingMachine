@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using VendingMachineApp.Business;
 using VendingMachineApp.Business.Exceptions;
